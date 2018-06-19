@@ -12,7 +12,6 @@ import java.util.Random;
  * Takes a text file of names and stores them, then randomly assigns them
  * @author Lara Quiring
  * Date: 6/18/18
- *
  */
 
 public class AssignPartners {
@@ -20,63 +19,62 @@ public class AssignPartners {
 	/**
 	 * Read in text file line by line
 	 * @param filePath | String | file location
-	 * @return ArrayList<String>
+	 * @return List<String>
 	 */
-	private static List<String> readInFile(String filePath) throws IOException {
-		File f = new File(filePath);
-		FileInputStream fIS = new FileInputStream(f);
-		BufferedReader br = new BufferedReader(new InputStreamReader(fIS));
-		String line = null;
+	private static List<String> readInFile(String filePath){
 		List<String> ar = new ArrayList<>();
-		
-		while((line = br.readLine()) != null) {
-			ar.add(line);
+		BufferedReader br;
+		try {
+			File f = new File(filePath);
+			FileInputStream fIS = new FileInputStream(f);
+			br = new BufferedReader(new InputStreamReader(fIS));
+			String line = null;
+			
+			while((line = br.readLine()) != null) {
+				ar.add(line);
+			}
+			
+			br.close();
+		} catch (IOException e) {
+			System.out.println("Check your input file and try again!");
 		}
 		
-		br.close();
 		return ar;
 	}
 	
 	/**
 	 * Random assignment
-	 * @param
+	 * @param List<String>
 	 */
 	private static List<Pair> assign(List<String> list) {
 		List<Pair> l = new ArrayList<Pair>();
 		Random r = new Random();
 		
 		while(!list.isEmpty() && list.size() >= 2) {
-			List<String> temp = new ArrayList<>();
-			if(list.size() > 2) {
-				int i = r.nextInt(list.size());
-				int tempInt = i;
-				String kid = list.get(i).trim();
-				list.remove(i);
-				while(i == tempInt) {
-					i = r.nextInt(list.size());
-				}
-				String kiddo = list.get(i).trim();
-				list.remove(i);
-				Pair pair = new Pair();
-				pair.setPair(kid, kiddo);
-			} else {
-				Pair pair = new Pair();
-				pair.setPair(list.get(0).trim(), list.get(1).trim());
-				list.remove(1);
-				list.remove(0);
-			}
+			//add 1st kid
+			int i = r.nextInt(list.size());
+			String kid = list.get(i).trim();
+			list.remove(i);
+			//add 2nd kid
+			i = r.nextInt(list.size());
+			String kiddo = list.get(i).trim();
+			list.remove(i);
+			//make pair and store
+			Pair pair = new Pair(kid, kiddo);
+			l.add(pair);
 		}
 		//odd number
 		if(list.size() != 0) {
 			int i = r.nextInt(l.size());
 			l.get(i).add(list.get(0).trim());	
 		}
+		
 		return l;
 	}
 	
 	/**
 	 * Print out resulting pairs
-	 * @param ArrayList<ArrayList<String>>
+	 * @param List<Pair>
 	 */
 	private static void parseResult(List<Pair> al) {
 		for(Pair str : al) {
@@ -95,14 +93,9 @@ public class AssignPartners {
 		//read in file
 		String str = "names.txt";
 		List<String> list = null;
-		try {
-			list = readInFile(str);
-		} catch (IOException e) {
-			System.out.println("Check your input file and try again!");
-		}
+		list = readInFile(str);
 		
 		//print out result
 		parseResult(assign(list));
 	}
-
 }
