@@ -95,7 +95,7 @@ public class AssignPartners {
 
 	public static void main(String[] args) {
 		//read in file
-		String str = "C:\\Users\\Austen\\eclipse-workspace\\Assigner\\names.txt";
+		String str = "names.txt";
 		ArrayList<String> list = null;
 		try {
 			list = readInFile(str);
